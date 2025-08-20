@@ -1,2 +1,587 @@
-# nguratours
-my first project
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Tours - Zanzibar Dream Tours</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Define CSS Variables for colors (a single monochrome theme) */
+        :root {
+            /* Main Theme: Black background, White text */
+            --bg-primary: #000000; /* Black for body background */
+            --bg-secondary: #000000; /* Default for sections like contact form, etc. */
+            --bg-card: #1a1a1a; /* Very dark gray for cards */
+            --text-primary: #ffffff; /* White for main headings/titles */
+            --text-secondary: #ffffff; /* White for paragraphs, general text */
+            --hero-gradient-start: #1a1a1a; /* Dark gray for hero gradient start */
+            --hero-gradient-end: #000000; /* Black for hero gradient end */
+            --footer-bg: #000000; /* Black for footer */
+            --footer-text: #ffffff; /* White for footer text */
+            --input-border: #333333; /* Dark gray for input borders */
+            --input-focus-ring: #ffffff; /* White for input focus */
+
+            /* Specific overrides for the header */
+            --header-bg: #ffffff; /* White for header background */
+            --header-text: #000000; /* Black for header text, company name, and menu items */
+            --header-link-hover: #333333; /* Dark gray for header link hover */
+            --header-btn-bg: #000000; /* Black for Book Now button */
+            --header-btn-text: #ffffff; /* White for Book Now button text */
+            --header-btn-hover-bg: #333333; /* Dark gray for Book Now button hover */
+            --blue-accent: #3b82f6; /* A shade of blue for the hamburger icon */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-secondary); /* Default text color for body */
+            padding-top: 76px; /* Add padding to body to prevent content from hiding behind fixed header */
+        }
+        /* Custom styles for gradients and shadows */
+        .hero-gradient {
+            background: linear-gradient(to right, var(--hero-gradient-start), var(--hero-gradient-end));
+        }
+        .btn-primary {
+            /* This class is used for the 'Book Now' buttons within tour cards */
+            background-color: var(--header-btn-bg); /* Using the black button background */
+            transition: background-color 0.3s ease;
+            color: var(--header-btn-text); /* Using the white button text */
+        }
+        .btn-primary:hover {
+            background-color: var(--header-btn-hover-bg); /* Dark gray on hover */
+        }
+        .card-shadow {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Animation for hover effect */
+            background-color: var(--bg-card); /* Card background */
+            color: var(--text-secondary); /* Card text color */
+        }
+        .card-shadow:hover {
+            transform: translateY(-5px); /* Lifts the card slightly */
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15), 0 4px 6px rgba(0, 0, 0, 0.1); /* Stronger shadow on hover */
+        }
+        /* Fixed Header Styles */
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 50; /* Ensure it stays on top of other content */
+            background-color: var(--header-bg); /* Header background is white */
+        }
+
+        /* Apply text colors based on variables */
+        h1, h2, h3 {
+            color: var(--text-primary);
+        }
+        /* Specifically target header text and links to be black */
+        .fixed-header .text-gray-800 { /* Company name */
+            color: var(--header-text); /* Force black for company name */
+        }
+        .fixed-header nav ul li a { /* Nav links */
+            color: var(--header-text); /* Force black for nav links */
+        }
+        .fixed-header nav ul li a:hover { /* Nav links hover */
+            color: var(--header-link-hover); /* Dark gray on hover */
+        }
+
+        .text-gray-700 { /* Adjusting existing text classes */
+            color: var(--text-secondary);
+        }
+        /* Ensure prices are black */
+        .price-text-black {
+            color: #000000; /* Explicitly black */
+        }
+        /* Ensure testimonial names are white on black background */
+        .testimonial-name {
+            color: var(--text-primary); /* White */
+        }
+
+        .bg-white { /* For sections that were white, now mapped to bg-secondary (black) */
+            background-color: var(--bg-secondary);
+        }
+        .bg-gray-50 { /* For cards, now mapped to bg-card (dark gray) */
+            background-color: var(--bg-card);
+        }
+        .bg-indigo-50 { /* For testimonials section, now also a card background, mapped to bg-card */
+            background-color: var(--bg-card);
+        }
+        .footer-content {
+            color: var(--footer-text);
+        }
+        .footer-content a {
+            color: var(--footer-text);
+        }
+        .form-input {
+            border-color: var(--input-border);
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+        }
+        .form-input:focus {
+            border-color: var(--input-focus-ring);
+            box-shadow: 0 0 0 1px var(--input-focus-ring);
+        }
+
+        /* Book Now Button Styling in header */
+        .book-now-btn {
+            background-color: var(--header-btn-bg); /* Black background */
+            color: var(--header-btn-text); /* White text */
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .book-now-btn:hover {
+            background-color: var(--header-btn-hover-bg); /* Dark gray on hover */
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15), 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* New Contact Section Button Styling */
+        .contact-section-btn {
+            background-color: #000000; /* Black background */
+            color: #ffffff; /* White text */
+            padding: 1rem 2rem;
+            border-radius: 0.5rem; /* rounded-lg equivalent */
+            font-weight: 700; /* font-bold equivalent */
+            font-size: 1.25rem; /* text-xl equivalent */
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05); /* shadow-xl equivalent */
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            display: inline-block; /* To allow padding and other box model properties */
+            text-decoration: none; /* Remove underline from link */
+        }
+        .contact-section-btn:hover {
+            background-color: #333333; /* Dark gray on hover */
+            transform: translateY(-2px); /* Slight lift on hover */
+        }
+
+        /* Mobile menu specific styles - now applies to all screen sizes for the navigation */
+        #mobileNav {
+            background-color: var(--header-bg); /* White background for mobile menu */
+            color: var(--header-text); /* Black text for mobile menu */
+        }
+        #mobileNav a {
+            color: var(--header-text); /* Ensure links in mobile menu are black */
+        }
+        #mobileNav a:hover {
+            color: var(--header-link-hover); /* Dark gray on hover for mobile menu links */
+        }
+        /* Hamburger icon color */
+        #menuToggle svg {
+            color: var(--blue-accent); /* Blue color for the hamburger icon */
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Header -->
+    <header class="shadow-md py-4 fixed-header">
+        <div class="container mx-auto px-4 flex justify-between items-center relative">
+            <!-- Left side: Hamburger (now always visible) -->
+            <div class="flex items-center">
+                <button id="menuToggle" class="p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Center: Company Name -->
+            <a href="index.html" class="text-2xl font-bold text-gray-800 absolute left-1/2 transform -translate-x-1/2">Zanzibar Dream Tours</a>
+
+            <!-- Right side: Book Now Button -->
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScto9M93eWOz1n6DenNX7lTRBz0yRAOFjXYB3tftu7tK_AjUQ/viewform?embedded=true" target="_blank" rel="noopener noreferrer" class="book-now-btn">Book Now</a>
+        </div>
+        <!-- Mobile Menu Overlay (initially hidden) -->
+        <div id="mobileMenuOverlay" class="fixed inset-0 bg-black bg-opacity-75 z-40 hidden"></div>
+        <!-- Mobile Nav (now serves as the primary navigation for all screen sizes) -->
+        <nav id="mobileNav" class="fixed top-0 left-0 w-64 h-full shadow-lg z-50 transform -translate-x-full transition-transform duration-300 ease-in-out">
+            <div class="p-4">
+                <button id="closeMenu" class="absolute top-4 right-4 text-gray-800">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                <ul class="mt-10 space-y-4 text-left">
+                    <li><a href="index.html" class="block font-medium text-lg py-2">Home</a></li>
+                    <li><a href="tours.html" class="block font-medium text-lg py-2">Tours</a></li>
+                    <li><a href="tours.html#transport-section" class="block font-medium text-lg py-2">Transport</a></li>
+                    <li><a href="#terms-policies-section" class="block font-medium text-lg py-2">Terms & Policies</a></li>
+                    <li><a href="#contact-section-button" class="block font-medium text-lg py-2">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section for Tours Page -->
+    <section class="hero-gradient text-white py-20 px-4 text-center rounded-b-lg shadow-lg">
+        <div class="container mx-auto">
+            <h1 class="text-5xl font-extrabold mb-4 leading-tight">Our Exclusive Zanzibar Tour Packages</h1>
+            <p class="text-xl mb-8 opacity-90">Find the perfect adventure tailored to your budget and dreams.</p>
+        </div>
+    </section>
+
+    <!-- Tour Categories Section -->
+    <section class="py-16 px-4 bg-white flex-grow">
+        <div class="container mx-auto">
+            <!-- Land Tours -->
+            <h2 id="land-tours-section" class="text-4xl font-bold text-gray-800 text-center mb-12">Land Tours</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                <!-- Tour Card: Spice and Farm Tour -->
+                <div class="bg-gray-50 p-6 rounded-lg card-shadow">
+                    <img src="https://placehold.co/400x250/333333/ffffff?text=Spice+Farm+Tour" alt="Spice Farm Tour" class="rounded-lg mb-4 w-full h-48 object-cover">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-2">Spice and Farm Tour</h3>
+                    <p class="text-gray-600 mb-4">Explore the aromatic spice plantations and learn about Zanzibar's rich agricultural heritage. Includes tasting fresh spices and fruits.</p>
+                    <p class="text-xl font-bold price-text-black mb-4">From <span class="text-3xl">$80</span> <span class="text-lg font-normal">(per person)</span></p>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScto9M93eWOz1n6DenNX7lTRBz0yRAOFjXYB3tftu7tK_AjUQ/viewform?embedded=true" target="_blank" rel="noopener noreferrer" class="btn-primary text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300">Book Now</a>
+                </div>
+                <!-- Tour Card: Stone Town & City Tour -->
+                <div class="bg-gray-50 p-6 rounded-lg card-shadow">
+                    <img src="https://placehold.co/400x250/333333/ffffff?text=Stone+Town+City" alt="Stone Town City Tour" class="rounded-lg mb-4 w-full h-48 object-cover">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-2">Stone Town & City Tour</h3>
+                    <p class="text-gray-600 mb-4">Wander through the historic alleys of Stone Town, visit iconic landmarks, and immerse yourself in the vibrant local culture.</p>
+                    <p class="text-xl font-bold price-text-black mb-4">From <span class="text-3xl">$95</span> <span class="text-lg font-normal">(per person)</span></p>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScto9M93eWOz1n6DenNX7lTRBz0yRAOFjXYB3tftu7tK_AjUQ/viewform?embedded=true" target="_blank" rel="noopener noreferrer" class="btn-primary text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300">Book Now</a>
+                </div>
+                <!-- Tour Card: Local Experience Tour -->
+                <div class="bg-gray-50 p-6 rounded-lg card-shadow">
+                    <img src="https://placehold.co/400x250/333333/ffffff?text=Local+Village" alt="Local Experience Tour" class="rounded-lg mb-4 w-full h-48 object-cover">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-2">Local Experience Tour</h3>
+                    <p class="text-gray-600 mb-4">Engage with local communities, learn traditional crafts, and enjoy authentic Zanzibari cuisine in a village setting.</p>
+                    <p class="text-xl font-bold price-text-black mb-4">From <span class="text-3xl">$120</span> <span class="text-lg font-normal">(per person)</span></p>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScto9M93eWOz1n6DenNX7lTRBz0yRAOFjXYB3tftu7tK_AjUQ/viewform?embedded=true" target="_blank" rel="noopener noreferrer" class="btn-primary text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300">Book Now</a>
+                </div>
+                <!-- Tour Card: Safari Tours (NEW) -->
+                <div class="bg-gray-50 p-6 rounded-lg card-shadow">
+                    <img src="https://placehold.co/400x250/333333/ffffff?text=Safari+Tour" alt="Safari Tour" class="rounded-lg mb-4 w-full h-48 object-cover">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-2">Safari Tours</h3>
+                    <p class="text-gray-600 mb-4">Embark on an unforgettable safari adventure to Tanzania's mainland parks, featuring incredible wildlife viewing.</p>
+                    <p class="text-xl font-bold price-text-black mb-4">From <span class="text-3xl">$350</span> <span class="text-lg font-normal">(per person)</span></p>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScto9M93eWOz1n6DenNX7lTRBz0yRAOFjXYB3tftu7tK_AjUQ/viewform?embedded=true" target="_blank" rel="noopener noreferrer" class="btn-primary text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300">Book Now</a>
+                </div>
+            </div>
+
+            <!-- Sea Tours -->
+            <h2 id="sea-tours-section" class="text-4xl font-bold text-gray-800 text-center mb-12">Sea Tours</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                <!-- Tour Card: Snorkeling -->
+                <div class="bg-gray-50 p-6 rounded-lg card-shadow">
+                    <img src="https://placehold.co/400x250/333333/ffffff?text=Snorkeling" alt="Snorkeling Tour" class="rounded-lg mb-4 w-full h-48 object-cover">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-2">Snorkeling Adventure</h3>
+                    <p class="text-gray-600 mb-4">Dive into the crystal-clear waters to explore vibrant coral reefs and diverse marine life. Equipment provided.</p>
+                    <p class="text-xl font-bold price-text-black mb-4">From <span class="text-3xl">$70</span> <span class="text-lg font-normal">(per person)</span></p>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScto9M93eWOz1n6DenNX7lTRBz0yRAOFjXYB3tftu7tK_AjUQ/viewform?embedded=true" target="_blank" rel="noopener noreferrer" class="btn-primary text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300">Book Now</a>
+                </div>
+                <!-- Tour Card: Jetski -->
+                <div class="bg-gray-50 p-6 rounded-lg card-shadow">
+                    <img src="https://placehold.co/400x250/333333/ffffff?text=Jetski" alt="Jetski Experience" class="rounded-lg mb-4 w-full h-48 object-cover">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-2">Jetski Thrill Ride</h3>
+                    <p class="text-gray-600 mb-4">Experience the thrill of riding a jetski across the beautiful coastal waters of Zanzibar. Guided sessions available.</p>
+                    <p class="text-xl font-bold price-text-black mb-4">From <span class="text-3xl">$150</span> <span class="text-lg font-normal">(per hour)</span></p>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScto9M93eWOz1n6DenNX7lTRBz0yRAOFjXYB3tftu7tK_AjUQ/viewform?embedded=true" target="_blank" rel="noopener noreferrer" class="btn-primary text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300">Book Now</a>
+                </div>
+                <!-- Tour Card: Kayak -->
+                <div class="bg-gray-50 p-6 rounded-lg card-shadow">
+                    <img src="https://placehold.co/400x250/333333/ffffff?text=Kayak" alt="Kayaking Tour" class="rounded-lg mb-4 w-full h-48 object-cover">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-2">Kayaking Exploration</h3>
+                    <p class="text-gray-600 mb-4">Paddle through serene mangroves or along the coastline, discovering hidden coves and tranquil waters at your own pace.</p>
+                    <p class="text-xl font-bold price-text-black mb-4">From <span class="text-3xl">$60</span> <span class="text-lg font-normal">(per person)</span></p>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScto9M93eWOz1n6DenNX7lTRBz0yRAOFjXYB3tftu7tK_AjUQ/viewform?embedded=true" target="_blank" rel="noopener noreferrer" class="btn-primary text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300">Book Now</a>
+                </div>
+                <!-- Tour Card: Kitesurfing -->
+                <div class="bg-gray-50 p-6 rounded-lg card-shadow">
+                    <img src="https://placehold.co/400x250/333333/ffffff?text=Kitesurfing" alt="Kitesurfing Lessons" class="rounded-lg mb-4 w-full h-48 object-cover">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-2">Kitesurfing Lessons</h3>
+                    <p class="text-gray-600 mb-4">Learn to kitesurf on the famous Paje beach with certified instructors. Suitable for beginners and advanced riders.</p>
+                    <p class="text-xl font-bold price-text-black mb-4">From <span class="text-3xl">$200</span> <span class="text-lg font-normal">(per lesson)</span></p>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScto9M93eWOz1n6DenNX7lTRBz0yRAOFjXYB3tftu7tK_AjUQ/viewform?embedded=true" target="_blank" rel="noopener noreferrer" class="btn-primary text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300">Book Now</a>
+                </div>
+                <!-- Tour Card: Submarine -->
+                <div class="bg-gray-50 p-6 rounded-lg card-shadow">
+                    <img src="https://placehold.co/400x250/333333/ffffff?text=Submarine" alt="Submarine Experience" class="rounded-lg mb-4 w-full h-48 object-cover">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-2">Underwater Submarine Adventure</h3>
+                    <p class="text-gray-600 mb-4">Explore the depths of the Indian Ocean without getting wet in a state-of-the-art semi-submarine. Perfect for all ages.</p>
+                    <p class="text-xl font-bold price-text-black mb-4">From <span class="text-3xl">$250</span> <span class="text-lg font-normal">(per person)</span></p>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScto9M93eWOz1n6DenNX7lTRBz0yRAOFjXYB3tftu7tK_AjUQ/viewform?embedded=true" target="_blank" rel="noopener noreferrer" class="btn-primary text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300">Book Now</a>
+                </div>
+            </div>
+
+            <!-- Island Tours -->
+            <h2 id="island-tours-section" class="text-4xl font-bold text-gray-800 text-center mb-12">Island Tours</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Tour Card: Mnemba Island -->
+                <div class="bg-gray-50 p-6 rounded-lg card-shadow">
+                    <img src="https://placehold.co/400x250/333333/ffffff?text=Mnemba+Island" alt="Mnemba Island Tour" class="rounded-lg mb-4 w-full h-48 object-cover">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-2">Mnemba Atoll Excursion</h3>
+                    <p class="text-gray-600 mb-4">Discover the pristine waters and vibrant marine life around Mnemba Atoll, a world-renowned snorkeling and diving spot.</p>
+                    <p class="text-xl font-bold price-text-black mb-4">From <span class="text-3xl">$180</span> <span class="text-lg font-normal">(per person)</span></p>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScto9M93eWOz1n6DenNX7lTRBz0yRAOFjXYB3tftu7tK_AjUQ/viewform?embedded=true" target="_blank" rel="noopener noreferrer" class="btn-primary text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300">Book Now</a>
+                </div>
+                <!-- Tour Card: Prison Island -->
+                <div class="bg-gray-50 p-6 rounded-lg card-shadow">
+                    <img src="https://placehold.co/400x250/333333/ffffff?text=Prison+Island+Tour" alt="Prison Island Tour" class="rounded-lg mb-4 w-full h-48 object-cover">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-2">Prison Island & Giant Tortoises</h3>
+                    <p class="text-gray-600 mb-4">Visit the historic Prison Island, home to giant Aldabra tortoises, and enjoy swimming and sunbathing on its beautiful beach.</p>
+                    <p class="text-xl font-bold price-text-black mb-4">From <span class="text-3xl">$100</span> <span class="text-lg font-normal">(per person)</span></p>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScto9M93eWOz1n6DenNX7lTRBz0yRAOFjXYB3tftu7tK_AjUQ/viewform?embedded=true" target="_blank" rel="noopener noreferrer" class="btn-primary text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300">Book Now</a>
+                </div>
+                <!-- Tour Card: Nakupenda Sandbank -->
+                <div class="bg-gray-50 p-6 rounded-lg card-shadow">
+                    <img src="https://placehold.co/400x250/333333/ffffff?text=Nakupenda+Sandbank" alt="Nakupenda Sandbank Tour" class="rounded-lg mb-4 w-full h-48 object-cover">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-2">Nakupenda Sandbank Escape</h3>
+                    <p class="text-gray-600 mb-4">Relax on the stunning white sands of Nakupenda Sandbank, enjoy snorkeling, and indulge in a fresh seafood BBQ lunch.</p>
+                    <p class="text-xl font-bold price-text-black mb-4">From <span class="text-3xl">$130</span> <span class="text-lg font-normal">(per person)</span></p>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScto9M93eWOz1n6DenNX7lTRBz0yRAOFjXYB3tftu7tK_AjUQ/viewform?embedded=true" target="_blank" rel="noopener noreferrer" class="btn-primary text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300">Book Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI-Powered Tour Recommendation Section (NEW) -->
+    <section id="ai-recommendation-section" class="py-16 px-4 bg-white text-center">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-gray-800 mb-8">✨ Get Your Personalized Tour Recommendation!</h2>
+            <p class="text-lg text-gray-700 max-w-3xl mx-auto mb-6">
+                Tell us about your ideal Zanzibar adventure, and our AI will suggest tours that match your interests.
+            </p>
+            <div class="max-w-2xl mx-auto bg-gray-50 p-8 rounded-lg card-shadow">
+                <textarea id="userPreferences" class="w-full p-4 rounded-md border form-input mb-4 h-32 resize-y" placeholder="e.g., I love history and local food, and I'm looking for a full-day tour."></textarea>
+                <button id="getRecommendationsBtn" class="btn-primary text-white font-semibold py-3 px-8 rounded-full shadow-md hover:shadow-lg transition duration-300">
+                    Get Recommendations ✨
+                </button>
+                <div id="loadingIndicator" class="mt-4 text-gray-600 hidden">
+                    <div class="animate-spin inline-block w-6 h-6 border-4 border-t-4 border-blue-500 border-solid rounded-full"></div>
+                    Generating recommendations...
+                </div>
+                <div id="recommendationsOutput" class="mt-8 text-left text-gray-700 space-y-4">
+                    <!-- AI recommendations will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Transport Services Section -->
+    <section id="transport-section" class="py-16 px-4 bg-white text-center">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-gray-800 mb-8">Transport Services</h2>
+            <p class="text-lg text-gray-700 max-w-3xl mx-auto mb-10">
+                Ensure a smooth and comfortable journey throughout Zanzibar with our reliable transport services. From airport transfers to island-wide travel, we've got your logistics covered.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Transport Card: Airport Transfer -->
+                <div class="bg-gray-50 p-6 rounded-lg card-shadow">
+                    <img src="https://placehold.co/400x250/333333/ffffff?text=Airport+Transfer" alt="Airport Transfer" class="rounded-lg mb-4 w-full h-48 object-cover">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-2">Airport Transfers</h3>
+                    <p class="text-gray-600 mb-4">Hassle-free pick-up and drop-off from Zanzibar International Airport to your accommodation.</p>
+                    <p class="text-xl font-bold price-text-black mb-4">From <span class="text-3xl">$30</span> <span class="text-lg font-normal">(per vehicle)</span></p>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScto9M93eWOz1n6DenNX7lTRBz0yRAOFjXYB3tftu7tK_AjUQ/viewform?embedded=true" target="_blank" rel="noopener noreferrer" class="btn-primary text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300">Book Now</a>
+                </div>
+                <!-- Transport Card: Island-wide Taxi -->
+                <div class="bg-gray-50 p-6 rounded-lg card-shadow">
+                    <img src="https://placehold.co/400x250/333333/ffffff?text=Island+Taxi" alt="Island Taxi" class="rounded-lg mb-4 w-full h-48 object-cover">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-2">Island-wide Taxi Service</h3>
+                    <p class="text-gray-600 mb-4">Reliable and comfortable taxi services for exploring any part of the island at your convenience.</p>
+                    <p class="text-xl font-bold price-text-black mb-4">From <span class="text-3xl">$50</span> <span class="text-lg font-normal">(per trip)</span></p>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScto9M93eWOz1n6DenNX7lTRBz0yRAOFjXYB3tftu7tK_AjUQ/viewform?embedded=true" target="_blank" rel="noopener noreferrer" class="btn-primary text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300">Book Now</a>
+                </div>
+                <!-- Transport Card: Private Driver -->
+                <div class="bg-gray-50 p-6 rounded-lg card-shadow">
+                    <img src="https://placehold.co/400x250/333333/ffffff?text=Private+Driver" alt="Private Driver" class="rounded-lg mb-4 w-full h-48 object-cover">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-2">Private Driver for Hire</h3>
+                    <p class="text-gray-600 mb-4">Enjoy the flexibility of a dedicated private driver for full-day excursions or custom itineraries.</p>
+                    <p class="text-xl font-bold price-text-black mb-4">From <span class="text-3xl">$100</span> <span class="text-lg font-normal">(per day)</span></p>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScto9M93eWOz1n6DenNX7lTRBz0yRAOFjXYB3tftu7tK_AjUQ/viewform?embedded=true" target="_blank" rel="noopener noreferrer" class="btn-primary text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transition duration-300">Book Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Terms and Policies Section -->
+    <section id="terms-policies-section" class="py-16 px-4 bg-white text-center">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-gray-800 mb-8">Terms and Policies</h2>
+            <div class="max-w-3xl mx-auto text-gray-700 text-left space-y-4">
+                <p><strong>1. Booking and Payments:</strong> All bookings require a [e.g., 20%] non-refundable deposit at the time of confirmation. The remaining balance is due [e.g., 30 days] prior to the tour start date. Payments can be made via [e.g., bank transfer, credit card].</p>
+                <p><strong>2. Cancellation Policy:</strong></p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Cancellations made [e.g., 30 days or more] before the tour start date will receive a [e.g., 80%] refund, excluding the non-refundable deposit.</li>
+                    <li>Cancellations made between [e.g., 15-29 days] before the tour start date will receive a [e.g., 50%] refund.</li>
+                    <li>Cancellations made less than [e.g., 14 days] before the tour start date are non-refundable.</li>
+                    <li>No-shows are non-refundable.</li>
+                </ul>
+                <p><strong>3. Changes to Bookings:</strong> Any changes to confirmed bookings are subject to availability and may incur additional changes. Requests for changes must be submitted in writing.</p>
+                <p><strong>4. Travel Insurance:</strong> We highly recommend all travelers purchase comprehensive travel insurance that covers cancellation, medical emergencies, personal liability, and loss of personal belongings.</p>
+                <p><strong>5. Health and Safety:</strong> Participants are responsible for ensuring they are medically fit for the chosen tour activities. Zanzibar Dream Tours adheres to local health and safety guidelines.</p>
+                <p><strong>6. Photography and Media:</strong> By participating in our tours, you agree that Zanzibar Dream Tours may use photographs or videos taken during the tour for promotional purposes, unless otherwise specified in writing.</p>
+                <p><strong>7. Force Majeure:</strong> Zanzibar Dream Tours is not liable for any failure or delay in performance due to circumstances beyond our reasonable control, including but not limited to natural disasters, acts of government, war, terrorism, or epidemics.</p>
+                <p><strong>8. Governing Law:</strong> These terms and conditions are governed by the laws of [e.g., Tanzania] and any disputes will be subject to the exclusive jurisdiction of the courts of [e.g., Zanzibar].</p>
+                <p>For any questions regarding our terms and policies, please contact us directly.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section with Book Now Button -->
+    <section id="contact-section-button" class="py-16 px-4 bg-white text-center">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-gray-800 mb-8">Ready to Book Your Dream Tour?</h2>
+            <p class="text-lg text-gray-700 max-w-3xl mx-auto mb-10">Click the button below to fill out our booking form and start planning your unforgettable Zanzibar adventure!</p>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScto9M93eWOz1n6DenNX7lTRBz0yRAOFjXYB3tftu7tK_AjUQ/viewform?embedded=true" target="_blank" rel="noopener noreferrer" class="contact-section-btn">Book Now via Google Form</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-gray-800 text-white py-8 px-4 mt-auto rounded-t-lg shadow-inner">
+        <div class="container mx-auto text-center md:flex md:justify-between md:items-center footer-content">
+            <div class="mb-4 md:mb-0">
+                <h3 class="text-xl font-bold mb-2">Zanzibar Dream Tours</h3>
+                <p>Your adventure starts here.</p>
+            </div>
+            <div class="mb-4 md:mb-0">
+                <h4 class="text-lg font-semibold mb-2">Contact Us</h4>
+                <p>Email: info@zanzibardreamtours.com</p>
+                <p>Phone: +255 7XX XXX XXX</p>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-2">Follow Us</h4>
+                <div class="flex justify-center space-x-4">
+                    <a href="https://www.facebook.com/Thamihi Sungura" class="hover:text-white transition duration-300">Facebook</a>
+                    <a href="https://www.instagram.com/ngura.18/" class="hover:text-white transition duration-300">Instagram</a>
+                    <a href="#" class="hover:text-white transition duration-300">Twitter</a>
+                </div>
+            </div>
+        </div>
+        <div class="text-center text-gray-500 mt-8 footer-content">
+            &copy; 2024 Zanzibar Dream Tours. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const closeMenu = document.getElementById('closeMenu');
+        const mobileNav = document.getElementById('mobileNav');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+
+        // Function to open the mobile menu
+        function openMobileMenu() {
+            mobileNav.classList.remove('-translate-x-full');
+            mobileMenuOverlay.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling on body
+        }
+
+        // Function to close the mobile menu
+        function closeMobileMenu() {
+            mobileNav.classList.add('-translate-x-full');
+            mobileMenuOverlay.classList.add('hidden');
+            document.body.style.overflow = ''; // Restore scrolling on body
+        }
+
+        // Event listener for opening the main menu
+        menuToggle.addEventListener('click', openMobileMenu);
+
+        // Event listener for closing the main menu
+        closeMenu.addEventListener('click', closeMobileMenu);
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu); // Close when clicking outside menu
+
+        // Modified: Handle navigation links with smooth scrolling
+        mobileNav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', (event) => {
+                const href = link.getAttribute('href');
+                // Check if it's an internal anchor link
+                if (href && href.startsWith('#')) {
+                    event.preventDefault(); // Prevent default jump behavior
+                    const targetId = href.substring(1); // Get the ID without '#'
+                    const targetElement = document.getElementById(targetId);
+
+                    if (targetElement) {
+                        // Scroll smoothly to the target element
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                        // Close the menu after a short delay, allowing scroll to initiate
+                        setTimeout(() => {
+                            closeMobileMenu();
+                        }, 300); // Adjust delay as needed for smooth transition
+                    } else {
+                        // If target element not found, still close menu
+                        closeMobileMenu();
+                    }
+                } else {
+                    // For external links or other page navigations, allow default behavior
+                    // and close menu after a short delay
+                    setTimeout(() => {
+                        closeMobileMenu();
+                    }, 50);
+                }
+            });
+        });
+
+        // --- Gemini API Integration for Tour Recommendations ---
+        const getRecommendationsBtn = document.getElementById('getRecommendationsBtn');
+        const userPreferencesInput = document.getElementById('userPreferences');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const recommendationsOutput = document.getElementById('recommendationsOutput');
+
+        getRecommendationsBtn.addEventListener('click', async () => {
+            const userPrompt = userPreferencesInput.value.trim();
+
+            if (!userPrompt) {
+                recommendationsOutput.innerHTML = '<p class="text-red-500">Please tell us about your preferences to get recommendations.</p>';
+                return;
+            }
+
+            loadingIndicator.classList.remove('hidden');
+            recommendationsOutput.innerHTML = ''; // Clear previous recommendations
+
+            // Define the available tour types and their general descriptions
+            const availableTours = `
+                Land Tours: Spice and Farm Tour, Stone Town & City Tour, Local Experience Tour, Safari Tours (to mainland Tanzania).
+                Sea Tours: Snorkeling Adventure, Jetski Thrill Ride, Kayaking Exploration, Kitesurfing Lessons, Underwater Submarine Adventure.
+                Island Tours: Mnemba Atoll Excursion, Prison Island & Giant Tortoises, Nakupenda Sandbank Escape.
+                Transport Services: Airport Transfers, Island-wide Taxi Service, Private Driver for Hire.
+            `;
+
+            const prompt = `You are a helpful and creative Zanzibar tour expert. A user is looking for tour recommendations based on their preferences.
+            
+            Here are the available tour categories and some examples:
+            ${availableTours}
+
+            User's preferences: "${userPrompt}"
+
+            Based on the user's preferences and the available tours, suggest a personalized tour or a combination of tours.
+            Provide a brief, enthusiastic explanation for each suggestion.
+            If transport is relevant, mention it as an option.
+            Format your response clearly, perhaps with bullet points or a short paragraph for each suggestion.
+            If the request is too vague, politely ask for more details.`;
+
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // Canvas will automatically provide the API key
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    recommendationsOutput.innerHTML = `<p class="font-bold text-lg mb-2 text-white">Here are some recommendations for you:</p><p>${text.replace(/\n/g, '<br>')}</p>`;
+                } else {
+                    recommendationsOutput.innerHTML = '<p class="text-red-500">Sorry, I could not generate recommendations at this time. Please try again.</p>';
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                recommendationsOutput.innerHTML = '<p class="text-red-500">An error occurred while fetching recommendations. Please check your network connection or try again later.</p>';
+            } finally {
+                loadingIndicator.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
